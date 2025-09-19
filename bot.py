@@ -66,6 +66,25 @@ class WhitelistButton(View):
         )
 
 # ------------------------
+# Embed Sender Funktion
+# ------------------------
+async def send_whitelist_embed(channel):
+    embed = discord.Embed(
+        title="**Here you find our Whitelist**",
+        description="Just click on the button below to get one of us.",
+        color=0x8f1eae
+    )
+    embed.set_author(
+        name="Supernova x Whitelist",
+        icon_url="https://images-ext-1.discordapp.net/external/ORAM7L-2USvIhk9TKRteJkF9JyLXFa0RNBvrfual4E0/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1401488134457524244/067dd861b8a4de1438d12c7bc283d935.webp?width=848&height=848"
+    )
+    embed.set_footer(
+        text="© 2022–2024 Superbova. All Rights Reserved.",
+        icon_url="https://images-ext-1.discordapp.net/external/ORAM7L-2USvIhk9TKRteJkF9JyLXFa0RNBvrfual4E0/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1401488134457524244/067dd861b8a4de1438d12c7bc283d935.webp?width=848&height=848"
+    )
+    await channel.send(embed=embed, view=WhitelistButton())
+
+# ------------------------
 # Events
 # ------------------------
 @bot.event
@@ -80,27 +99,26 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=activity)
     print("🎬 Streaming Status gesetzt!")
 
-    # Embed nur einmal senden
+    # Embed nur einmal automatisch senden
     channel = bot.get_channel(WHITELIST_CHANNEL_ID)
     if channel:
         async for message in channel.history(limit=50):
             if message.author == bot.user:
                 break
         else:
-            embed = discord.Embed(
-                title="**Here you find our Whitelist**",
-                description="Just click on the button below to get one of us.",
-                color=0x8f1eae
-            )
-            embed.set_author(
-                name="Supernova x Whitelist",
-                icon_url="https://images-ext-1.discordapp.net/external/ORAM7L-2USvIhk9TKRteJkF9JyLXFa0RNBvrfual4E0/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1401488134457524244/067dd861b8a4de1438d12c7bc283d935.webp?width=848&height=848"
-            )
-            embed.set_footer(
-                text="© 2022–2024 Superbova. All Rights Reserved.",
-                icon_url="https://images-ext-1.discordapp.net/external/ORAM7L-2USvIhk9TKRteJkF9JyLXFa0RNBvrfual4E0/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1401488134457524244/067dd861b8a4de1438d12c7bc283d935.webp?width=848&height=848"
-            )
-            await channel.send(embed=embed, view=WhitelistButton())
+            await send_whitelist_embed(channel)
+
+# ------------------------
+# Commands
+# ------------------------
+@bot.command()
+async def sendwhitelist(ctx):
+    """Manuell ein Whitelist-Embed posten"""
+    if ctx.channel.id == WHITELIST_CHANNEL_ID:
+        await send_whitelist_embed(ctx.channel)
+        await ctx.send("📨 Whitelist embed sent!", delete_after=5)
+    else:
+        await ctx.send("❌ This command only works in the Whitelist channel.", delete_after=5)
 
 # ------------------------
 # Start Bot
