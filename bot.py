@@ -84,14 +84,21 @@ async def on_ready():
     activity = discord.Streaming(name="Whitelist Bot Online", url="https://www.twitch.tv/qirixn")
     await bot.change_presence(status=discord.Status.online, activity=activity)
 
-    # Send Whitelist Embed once on bot start
     guild = bot.get_guild(GUILD_ID)
     if guild:
         channel = bot.get_channel(WHITELIST_CHANNEL_ID)
         if channel:
+            # Prüfen ob schon ein Embed vom Bot existiert
+            async for msg in channel.history(limit=50):
+                if msg.author == bot.user and msg.embeds:
+                    print("ℹ️ Whitelist-Embed existiert bereits – kein neues gesendet.")
+                    return
+
+            # Falls keins existiert → Neues senden
             embed = create_whitelist_embed()
             view = WhitelistButton()
             await channel.send(embed=embed, view=view)
+            print("✅ Whitelist-Embed gesendet.")
 
 # ------------------------
 # Run Bot
