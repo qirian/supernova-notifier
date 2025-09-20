@@ -1,19 +1,19 @@
 import os
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 from keep_alive import keep_alive
 
 intents = discord.Intents.default()
 intents.members = True  # Needed to detect boosts (member updates)
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# ---- Profile Picture ----
-PROFILE_PIC_URL = "https://cdn.discordapp.com/attachments/1401822345953546284/1418750912758943754/emvpuh1.gif"
+# ---- Profile Picture (animated GIF) ----
+AVATAR_PATH = "avatar.gif"  # Stelle sicher, dass die GIF-Datei im gleichen Ordner liegt
 
 # ---- Image Links for Embed ----
-IMG_THUMB = PROFILE_PIC_URL
-IMG_AUTHOR = PROFILE_PIC_URL
-IMG_FOOTER = PROFILE_PIC_URL
+IMG_THUMB = "https://cdn.discordapp.com/attachments/1401822345953546284/1418750912758943754/emvpuh1.gif"
+IMG_AUTHOR = IMG_THUMB
+IMG_FOOTER = IMG_THUMB
 
 # ---- Channel ID for Boosts ----
 BOOST_CHANNEL_ID = 1418440616131428482  # Set your boost channel ID
@@ -28,6 +28,15 @@ async def on_ready():
         name="discord.gg/supermova",
         url="https://www.twitch.tv/qirixn"
     ))
+
+    # Set animated GIF avatar
+    try:
+        with open(AVATAR_PATH, "rb") as f:
+            avatar_bytes = f.read()
+        await bot.user.edit(avatar=avatar_bytes)
+        print("Animated GIF avatar set successfully!")
+    except Exception as e:
+        print(f"Could not set animated GIF avatar: {e}")
 
 # ---- Detect Boosts ----
 @bot.event
@@ -49,7 +58,10 @@ async def on_member_update(before, after):
         )
         embed.set_author(name="Supernova x Welcomer", icon_url=IMG_AUTHOR)
         embed.set_thumbnail(url=IMG_THUMB)
-        embed.set_footer(text="© 2022–2024 Supernova | Hosted by Levin. All Rights Reserved.", icon_url=IMG_FOOTER)
+        embed.set_footer(
+            text="© 2022–2024 Supernova | Hosted by Levin. All Rights Reserved.",
+            icon_url=IMG_FOOTER
+        )
 
         try:
             await channel.send(embed=embed)
