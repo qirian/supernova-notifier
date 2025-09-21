@@ -60,18 +60,13 @@ async def vouch(interaction: discord.Interaction, stars: int, feedback: str):
     embed.set_author(name="Supernova x Notifier", icon_url=AUTHOR_ICON)
     embed.set_footer(text=FOOTER_TEXT, icon_url=FOOTER_ICON)
 
-    # Send embed to Vouch Channel
-    vouch_channel = bot.get_channel(VOUCH_CHANNEL_ID)
-    if vouch_channel is None:
-        try:
-            vouch_channel = await bot.fetch_channel(VOUCH_CHANNEL_ID)
-        except Exception as e:
-            print("Could not get vouch channel:", e)
-            await interaction.response.send_message("Vouch channel not found or inaccessible.", ephemeral=True)
-            return
-
+    # Send embed to Vouch Channel (nur einmal!)
     try:
-        await vouch_channel.send(embed=embed)
+        vouch_channel = bot.get_channel(VOUCH_CHANNEL_ID)
+        if vouch_channel is None:
+            vouch_channel = await bot.fetch_channel(VOUCH_CHANNEL_ID)
+
+        await vouch_channel.send(embed=embed)  # Embed wird nur einmal gesendet
         await interaction.response.send_message("Your vouch has been submitted. Thank you!", ephemeral=True)
     except discord.Forbidden:
         await interaction.response.send_message("I don't have permission to post in the vouch channel.", ephemeral=True)
