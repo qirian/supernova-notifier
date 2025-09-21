@@ -7,7 +7,7 @@ from keep_alive import keep_alive
 # -------------------------
 # Konfiguration
 # -------------------------
-GUILD_ID = 1401492898293481505          # Deine Test-Guild für sofortigen Slash-Command
+GUILD_ID = 1401492898293481505          # Test-Guild für sofortige Slash-Command Registrierung
 VOUCH_CHANNEL_ID = 1418781950994550815  # Channel, in den Vouches gepostet werden sollen
 
 # Embed Style (wie Welcomer)
@@ -49,10 +49,10 @@ async def vouch(interaction: discord.Interaction, stars: int, feedback: str):
         await interaction.response.send_message("Invalid star rating! Please enter a number between 1 and 5.", ephemeral=True)
         return
 
-    # Build embed (Feedback oben, Sterne unten)
+    # Build embed (Feedback oben, Sterne unten, User mention im Embed)
     embed = discord.Embed(
         title="Vouch x Supernova | Hosted by Levin.",
-        description=f"**Feedback:** {feedback}\n**Stars:** {'⭐' * stars}",
+        description=f"{interaction.user.mention}\n\n**Feedback:** {feedback}\n**Stars:** {'⭐' * stars}",
         color=EMBED_COLOR
     )
     embed.set_thumbnail(url=THUMBNAIL_URL)
@@ -71,7 +71,7 @@ async def vouch(interaction: discord.Interaction, stars: int, feedback: str):
             return
 
     try:
-        await vouch_channel.send(content=f"Vouch from {interaction.user.mention}", embed=embed)
+        await vouch_channel.send(embed=embed)
         await interaction.response.send_message("Your vouch has been submitted. Thank you!", ephemeral=True)
     except discord.Forbidden:
         await interaction.response.send_message("I don't have permission to post in the vouch channel.", ephemeral=True)
