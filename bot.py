@@ -30,10 +30,12 @@ FOOTER_TEXT = "© 2022–2024 Supernova | Hosted by Levin. All Rights Reserved."
     feedback="Write your feedback about your purchase"
 )
 async def vouch(interaction: discord.Interaction, stars: int, feedback: str):
+    # Validate stars
     if stars < 1 or stars > 5:
         await interaction.response.send_message("Invalid star rating! Please enter a number between 1 and 5.", ephemeral=True)
         return
 
+    # Build embed
     embed = discord.Embed(
         title="Vouch x Supernova | Hosted by Levin.",
         description=f"**Stars:** {'⭐' * stars}\n**Feedback:** {feedback}",
