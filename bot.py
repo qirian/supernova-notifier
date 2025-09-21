@@ -57,7 +57,7 @@ async def vouch(interaction: discord.Interaction, stars: int, feedback: str):
     )
     embed.set_thumbnail(url=THUMBNAIL_URL)
     embed.set_image(url=IMAGE_URL)
-    embed.set_author(name="Supernova x Welcomer", icon_url=AUTHOR_ICON)
+    embed.set_author(name="Supernova x Notifier", icon_url=AUTHOR_ICON)
     embed.set_footer(text=FOOTER_TEXT, icon_url=FOOTER_ICON)
 
     # Send embed to Vouch Channel
