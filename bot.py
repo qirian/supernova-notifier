@@ -33,7 +33,7 @@ async def on_ready():
 
     # Streaming Presence
     await bot.change_presence(activity=discord.Streaming(
-        name="discord.gg/supernova",
+        name="discord.gg/supernovaeu",
         url="https://www.twitch.tv/qirixn"
     ))
 
